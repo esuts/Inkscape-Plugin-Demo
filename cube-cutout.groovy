@@ -14,21 +14,13 @@ File f = ScriptingEngine
 	)
 println "Extruding SVG "+f.getAbsolutePath()
 SVGLoad s = new SVGLoad(f.toURI())
-println "Layers= "+s.getLayers()
-// A map of layers to polygons
-HashMap<String,List<Polygon>> polygonsByLayer = s.toPolygons()
-// extrude all layers to a map to 10mm thick
-HashMap<String,ArrayList<CSG>> csgByLayers = s.extrudeLayers(10)
-// extrude just one layer to 10mm
-def holeParts = s.extrudeLayerToCSG(10,"Slice 1")
-def holeParts = s.extrudeLayerToCSG(10,"Slice 2")
-// seperate holes and outsides using layers to differentiate
 
-/*
-def outsideParts = s.extrudeLayerToCSG(10,"Slice 2")
-					.difference(holeParts)
-// layers can be extruded at different depths					
-def boarderParts = s.extrudeLayerToCSG(5,"3-boarder")
-*/
+CSG base = s.extrudeLayerToCSG(4, "base") 
+CSG cutout = s.extrudeLayerToCSG(3,"cutout")
+.move(0, 0, 2)
 
-return [CSG.unionAll([boarderParts,outsideParts]),s.extrudeLayerToCSG(2,"4-star")]
+CSG subtraction = base.difference(cutout)
+
+return subtraction
+
+//return [subtraction,star1,star2,star3]
