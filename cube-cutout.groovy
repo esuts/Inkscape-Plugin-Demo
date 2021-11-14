@@ -21,6 +21,10 @@ CSG cutout = s.extrudeLayerToCSG(3,"cutout")
 
 CSG subtraction = base.difference(cutout)
 
-return subtraction
+CSG fireraised = s.extrudeLayerToCSG(4, "fireraised") 
+CSG firecutout = s.extrudeLayerToCSG(3,"firecut")
+.move(0, 0, 2)
 
-//return [subtraction,star1,star2,star3]
+CSG firesubtraction = fireraised.difference(firecutout)
+
+return [CSG.unionAll([subtraction,firesubtraction])]
